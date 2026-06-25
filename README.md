@@ -8,7 +8,7 @@ The goal was to design and execute a robust data cleaning pipeline using Postgre
 ---
 
 ## 📁 Repository Structure
-* / : Contains the initial raw dataset file cafe_sales_raw.csv.
+* cafe_sales_clean_sql.sql : Contains the analytical query scripts used for the project reports.
 * README.md : Comprehensive documentation of the project pipeline, engineering fixes, and business queries.
 
 ---
@@ -21,11 +21,10 @@ The goal was to design and execute a robust data cleaning pipeline using Postgre
 * Incorrect Data Types: Transaction dates and numerical values were entirely stored as text/character varying fields.
 * Missing Calculations: Several transactional rows had blank or broken total_spent fields despite having valid item quantities and unit prices.
 
-### 2. Production Pipeline Implementation:
-A production table (cafe_sales_clean) was built with strict, normalized data types (INTEGER, NUMERIC(10,2), DATE, VARCHAR). The raw data was programmatically parsed, cleansed, and mathematically reconciled using targeted UPDATE scripts with explicit type-casting (::), conditional statements (CASE WHEN), and text normalization tools (TRIM, UPPER).
+### 2. Production Pipeline Implementation (The Cleaning Script):
+A production table (cafe_sales_clean) was built with strict, normalized data types. The raw data was programmatically parsed, cleansed, and mathematically reconciled using targeted UPDATE scripts with explicit type-casting (::), conditional statements (CASE WHEN), and text normalization tools (TRIM):
 
 `sql
--- Comprehensive script to clean text garbage, parse datatypes, and calculate missing values
 UPDATE cafe_sales_clean c
 SET 
     -- 1. Cleaning and casting item quantities
@@ -49,3 +48,4 @@ SET
     END
 FROM cafe_sales_raw r
 WHERE c.transaction_id = TRIM(r.transaction_id);
+ 
